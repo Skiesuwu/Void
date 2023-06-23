@@ -20,12 +20,15 @@ export default class Server {
     this.app.listen(this.port, () => {
       Logger.log(`Void is now listening on port ${this.port}`);
     });
+
+    this.routes();
   }
 
   /**
    * Every Route we will be needing.
    */
   routes(): void {
-    // TODO: Routes
+    this.app.use(require("./routes/PasswordStrength"));
+    this.app.use(require("./routes/Auth"));
   }
 }
