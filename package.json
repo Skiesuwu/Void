@@ -7,7 +7,8 @@
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "prisma-migrate": "npx prisma migrate dev --name init"
   },
   "repository": {
     "type": "git",
@@ -27,15 +28,22 @@
   },
   "homepage": "https://github.com/Skiesuwu/Void#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "prisma": "^4.16.1",
+    "sqlite3": "^5.1.6",
     "typescript": "^5.1.3"
   },
   "devDependencies": {
+    "@prisma/client": "^4.16.1",
+    "@types/bcrypt": "^5.0.0",
     "@types/chalk": "^2.2.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
     "ts-node-dev": "^2.0.0"
   }
 }

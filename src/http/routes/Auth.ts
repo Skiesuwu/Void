@@ -1,42 +1,89 @@
 import { Router } from "express";
 import Logger from "../../utils/Logger";
+import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
+import { initDatabase } from "../../database/Database";
+import env from "../../../env";
 
 const app = Router();
+const prisma = initDatabase();
 
-// TODO: Implement Database this won't work
+/*
+  Body
+  username: string,
+  password: string,
+  email: string,
+  birthday: { day: number, month: number, year: number },
+  client_id: string,
+  arkose: { token: string }
+*/
+app.post("/register", async (req, res, next) => {
+  const { email, username, password, birthday, client_id, arkose } = req.body;
 
-app.post("/register", async (req, res) => {
-  res
-    .json({
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      birthday: req.body.birthday,
-      client_id: req.body.client_id,
-      arkose: {
-        token: req.body.captcha_token,
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        username,
       },
-    })
-    .status(200)
-    .end();
+    });
 
-  Logger.debug(`Username: ${req.body.username}`);
-  Logger.debug(`Password: ${req.body.password}`);
+    if (result) {
+      return res
+        .status(400)
+        .json({ status: 400, error: "User already exists." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        username,
+        password: hashedPassword,
+        client_id,
+      },
+    });
+
+    const token = jsonwebtoken.sign({ id: user.id }, env.JWT_SECRET);
+    Logger.log(`User has been created with the username ${user.username}`);
+
+    return res.status(200).json({ status: 200, token }).end();
+  } catch (error) {
+    let err = error as Error;
+    Logger.error(err.message);
+  }
 });
 
 app.post("/login", async (req, res) => {
-  res
-    .json({
-      username: req.body.username,
-      password: req.body.password,
-      client_id: req.body.client_id,
-      undelete_user: false,
-    })
-    .status(200)
-    .end();
+  try {
+    const { username, password } = req.body;
 
-  Logger.debug(`Username: ${req.body.username}`);
-  Logger.debug(`Password: ${req.body.password}`);
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ status: 400, error: "User not found" });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (isValidPassword) {
+      const token = jsonwebtoken.sign({ id: user.id }, env.JWT_SECRET);
+      Logger.log(`${user.username} has logged in with the id ${user.id}`);
+
+      return res.status(200).json({ status: 200, token }).end();
+    } else {
+      return res
+        .status(400)
+        .json({ status: 400, error: "Invalid Password or Usernmae" });
+    }
+  } catch (error) {
+    let err = error as Error;
+    Logger.error(err.message);
+  }
 });
 
 app.post("/integrity", async (req, res) => {
@@ -44,16 +91,33 @@ app.post("/integrity", async (req, res) => {
 });
 
 app.post("/protected_register", async (req, res) => {
-  res
-    .json({
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      birthday: req.body.birthday,
-      client_id: req.body.client_id,
-    })
-    .status(200)
-    .end();
+  const { username, birthday } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ status: 400, error: "User not found" });
+    }
+
+    res
+      .json({
+        username: user.username,
+        password: user.password,
+        email: user.email,
+        birthday,
+        client_id: user.client_id,
+      })
+      .status(200)
+      .end();
+  } catch (error) {
+    let err = error as Error;
+    Logger.error(err.message);
+  }
 });
 
 export = app;
