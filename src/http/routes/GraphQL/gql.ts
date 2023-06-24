@@ -149,19 +149,17 @@ app.post("/gql", async (req, res) => {
         requestID: "01H3PEGVA99VQAZA3Z12VM278F",
       },
     },
-    [
-      {
-        operationName: "Login_FacebookAndEmail",
-        variables: {},
-        extensions: {
-          persistedQuery: {
-            version: 1,
-            sha256Hash:
-              "714331e927153449bbbd299fd7656153e6947530d81998ea85ba5fb003e06ebe",
-          },
+    {
+      operationName: "Login_FacebookAndEmail",
+      variables: {},
+      extensions: {
+        persistedQuery: {
+          version: 1,
+          sha256Hash:
+            "714331e927153449bbbd299fd7656153e6947530d81998ea85ba5fb003e06ebe",
         },
       },
-    ],
+    },
   ]);
 });
 

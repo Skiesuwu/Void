@@ -41,7 +41,7 @@ app.post("/register", async (req, res, next) => {
 
     return res.status(200).json({ status: 200, token }).end();
   } catch (error) {
-    let err = error as Error;
+    const err = error as Error;
     Logger.error(err.message);
   }
 });
@@ -73,7 +73,7 @@ app.post("/login", async (req, res) => {
         .json({ status: 400, error: "Invalid Password or Usernmae" });
     }
   } catch (error) {
-    let err = error as Error;
+    const err = error as Error;
     Logger.error(err.message);
   }
 });
@@ -99,7 +99,7 @@ app.post("/protected_register", async (req, res) => {
 
     res.json({}).status(200).end();
   } catch (error) {
-    let err = error as Error;
+    const err = error as Error;
     Logger.error(err.message);
   }
 });
@@ -123,7 +123,7 @@ app.post("/protected_login", async (req, res) => {
       redirect_path: "https://www.twitch.tv/",
     });
   } catch (error) {
-    let err = error as Error;
+    const err = error as Error;
     Logger.error(err.message);
   }
 });
