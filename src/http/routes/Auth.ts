@@ -4,19 +4,11 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { initDatabase } from "../../database/Database";
 import env from "../../../env";
+import { generateAccessToken } from "../../utils/generateAccessToken";
 
 const app = Router();
 const prisma = initDatabase();
 
-/*
-  Body
-  username: string,
-  password: string,
-  email: string,
-  birthday: { day: number, month: number, year: number },
-  client_id: string,
-  arkose: { token: string }
-*/
 app.post("/register", async (req, res, next) => {
   const { email, username, password, birthday, client_id, arkose } = req.body;
 
@@ -91,7 +83,7 @@ app.post("/integrity", async (req, res) => {
 });
 
 app.post("/protected_register", async (req, res) => {
-  const { username, birthday, email } = req.body;
+  const { username, email } = req.body;
 
   try {
     const user = await prisma.user.findFirstOrThrow({
@@ -105,16 +97,7 @@ app.post("/protected_register", async (req, res) => {
       return res.status(400).json({ status: 400, error: "User not found" });
     }
 
-    res
-      .json({
-        // username: user.username,
-        // password: user.password,
-        // email: user.email,
-        // birthday,
-        // client_id: user.client_id,
-      })
-      .status(200)
-      .end();
+    res.json({}).status(200).end();
   } catch (error) {
     let err = error as Error;
     Logger.error(err.message);
@@ -136,7 +119,7 @@ app.post("/protected_login", async (req, res) => {
     }
 
     res.json({
-      access_token: null,
+      access_token: generateAccessToken(30, user.username, user.client_id),
       redirect_path: "https://www.twitch.tv/",
     });
   } catch (error) {
