@@ -31,5 +31,7 @@ export default class Server {
   routes(): void {
     this.app.use(require("./routes/PasswordStrength"));
     this.app.use(require("./routes/Auth"));
+    this.app.use("/graphql", require("./routes/GraphQL/gql"));
+    this.app.use("/graphql", require("./routes/GraphQL/integrity"));
   }
 }

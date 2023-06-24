@@ -91,12 +91,13 @@ app.post("/integrity", async (req, res) => {
 });
 
 app.post("/protected_register", async (req, res) => {
-  const { username, birthday } = req.body;
+  const { username, birthday, email } = req.body;
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirstOrThrow({
       where: {
         username,
+        email,
       },
     });
 
@@ -106,14 +107,38 @@ app.post("/protected_register", async (req, res) => {
 
     res
       .json({
-        username: user.username,
-        password: user.password,
-        email: user.email,
-        birthday,
-        client_id: user.client_id,
+        // username: user.username,
+        // password: user.password,
+        // email: user.email,
+        // birthday,
+        // client_id: user.client_id,
       })
       .status(200)
       .end();
+  } catch (error) {
+    let err = error as Error;
+    Logger.error(err.message);
+  }
+});
+
+app.post("/protected_login", async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ status: 400, error: "User not found" });
+    }
+
+    res.json({
+      access_token: null,
+      redirect_path: "https://www.twitch.tv/",
+    });
   } catch (error) {
     let err = error as Error;
     Logger.error(err.message);
