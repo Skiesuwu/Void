@@ -1,8 +1,4 @@
-export function generateAccessToken(
-  length: number,
-  username: string,
-  client_id: string
-): string {
+export function generateAccessToken(length: number): string {
   let result = "";
   const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;

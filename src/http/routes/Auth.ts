@@ -9,8 +9,8 @@ import { generateAccessToken } from "../../utils/generateAccessToken";
 const app = Router();
 const prisma = initDatabase();
 
-app.post("/register", async (req, res, next) => {
-  const { email, username, password, birthday, client_id, arkose } = req.body;
+app.post("/register", async (req, res) => {
+  const { email, username, password, client_id } = req.body;
 
   try {
     const result = await prisma.user.findUnique({
@@ -119,7 +119,7 @@ app.post("/protected_login", async (req, res) => {
     }
 
     res.json({
-      access_token: generateAccessToken(30, user.username, user.client_id),
+      access_token: generateAccessToken(30),
       redirect_path: "https://www.twitch.tv/",
     });
   } catch (error) {

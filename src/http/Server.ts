@@ -3,6 +3,7 @@ import env from "../../env";
 import Logger from "../utils/Logger";
 import Config from "./config/Config";
 import { initDatabase } from "../database/Database";
+import Socket from "../websocket/Socket";
 
 import PasswordStrength from "./routes/PasswordStrength";
 import Auth from "./routes/Auth";
@@ -12,9 +13,11 @@ import integrity from "./routes/GraphQL/integrity";
 export default class Server {
   private app: Application;
   private port = process.env.PORT || env.PORT;
+  private socket: Socket;
 
   constructor(app: Application) {
     this.app = app;
+    this.socket = new Socket(env.SOCKET_PORT);
   }
 
   /**
@@ -28,6 +31,7 @@ export default class Server {
       Logger.log(`Void is now listening on port ${this.port}`);
     });
 
+    this.socket.init();
     this.routes();
   }
 
