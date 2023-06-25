@@ -4,7 +4,7 @@
   "description": "A reimplementation of the twitch backend made using typescript",
   "main": "dist/src/index.js",
   "scripts": {
-    "setup": "npm install && && npm run generate:assets && npm run build && npm start",
+    "setup": "npm install && npm run generate:assets && npm run build && npm start",
     "start": "node dist/src/index.js",
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc",
