@@ -3,3 +3,4 @@ dist/
 
 env.ts*
 package-lock.json*
+assets/
