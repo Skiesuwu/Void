@@ -150,13 +150,15 @@ app.post("/gql", async (req, res) => {
       },
     },
     {
-      operationName: "Login_FacebookAndEmail",
-      variables: {},
-      extensions: {
-        persistedQuery: {
-          version: 1,
-          sha256Hash:
-            "714331e927153449bbbd299fd7656153e6947530d81998ea85ba5fb003e06ebe",
+      data: {
+        operationName: "Login_FacebookAndEmail",
+        variables: {},
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash:
+              "714331e927153449bbbd299fd7656153e6947530d81998ea85ba5fb003e06ebe",
+          },
         },
       },
     },
