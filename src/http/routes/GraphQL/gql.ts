@@ -303,6 +303,35 @@ app.post("/gql", async (req, res) => {
         },
       },
     },
+    // I think?????
+    {
+      data: {
+        cursor: "",
+        node: {
+          id: "69423",
+          name: "Just Chatting",
+          viewersCount: 809072,
+          displayName: "Just Chatting",
+          boxArtURL:
+            "https://static-cdn.jtvnw.net/ttv-boxart/509658-188x250.jpg",
+          gameTags: [
+            {
+              id: "2610cff9-10ae-4cb3-8500-778e6722fbb5",
+              isLanguageTag: false,
+              localizedName: "IRL",
+              tagName: "IRL",
+              __typename: "Tag",
+            },
+          ],
+          originalReleaseDate: null,
+          __typename: "Game",
+        },
+        trackingID: req.body.trackingID,
+        promotionsCampaignID: req.body.promotionsCampaignID,
+        sourceType: "RECOMMENDED",
+        __typename: "ShelfContentEdge",
+      },
+    },
     {
       data: {
         currentUser: {
