@@ -8,7 +8,9 @@ import Socket from "../websocket/Socket";
 import PasswordStrength from "./routes/PasswordStrength";
 import Auth from "./routes/Auth";
 import gql from "./routes/GraphQL/gql";
+import Assets from "./routes/Assets";
 import integrity from "./routes/GraphQL/integrity";
+import config from "./routes/Config";
 
 export default class Server {
   private app: Application;
@@ -43,5 +45,7 @@ export default class Server {
     this.app.use(Auth);
     this.app.use("/graphql", gql);
     this.app.use("/graphql", integrity);
+    this.app.use("/assets", Assets);
+    this.app.use("/config", config);
   }
 }
